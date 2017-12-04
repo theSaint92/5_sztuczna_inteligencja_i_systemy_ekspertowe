@@ -1,9 +1,8 @@
 #include "Board.h"
 #include <vector>
-#include <string>
-#include <algorithm>
-#include <sstream>
-#include <iterator>
+#include <algorithm> //random_shuffle
+#include <sstream> //toString()
+#include <string> //toString()
 
 
 Board::Board()
@@ -17,6 +16,7 @@ Board::Board()
 
 Board::Board(int rows, int cols)
 {
+	if (rows*cols > 20 || rows*cols <= 0) throw std::invalid_argument("rows*cols must be in range (1...20)");
 	this->rows = rows;
 	this->cols = cols;
 	// generete some random state of the puzzle using built-in random generator:
@@ -27,6 +27,8 @@ Board::Board(int rows, int cols)
 
 Board::Board(int rows, int cols, std::vector<int> values)
 {
+	if (rows*cols > 20 || rows*cols <= 0) throw std::invalid_argument("rows*cols must be in range (1...20)");
+	if (rows*cols != values.size()) throw std::invalid_argument("rows*cols must be equal to values vector size");
 	this->rows = rows;
 	this->cols = cols;
 	this->values = values;
@@ -36,9 +38,15 @@ Board::~Board()
 {
 }
 
-int Board::transformToState()
+uint64_t Board::transformToState()
 {
-	return 2;
+	//TODO
+	return 0;
+}
+
+void Board::getFromState(uint64_t state)
+{
+	//TODO
 }
 
 std::string Board::toString()
@@ -47,12 +55,12 @@ std::string Board::toString()
 
 	if (!this->values.empty())
 	{
-		// Convert all but the last element to avoid a trailing ","
-		std::copy(this->values.begin(), this->values.end() - 1,
-			std::ostream_iterator<int>(oss, " "));
-
-		// Now add the last element with no delimiter
-		oss << this->values.back();
+		int size = this->values.size();
+		
+		for (int i = 0; i < size; i++) {
+			oss << this->values[i] << "\t";
+			if ((i+1)%this->cols == 0) oss << "\n";
+		}
 	}
 
 	return oss.str();

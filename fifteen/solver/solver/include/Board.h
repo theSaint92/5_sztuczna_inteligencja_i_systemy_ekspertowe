@@ -25,7 +25,8 @@ public:
 	std::vector<int> getValues();
 
 	//Methods
-	int transformToState();
+	uint64_t transformToState();
+	void getFromState(uint64_t state);
 	std::string toString();
 };
 
