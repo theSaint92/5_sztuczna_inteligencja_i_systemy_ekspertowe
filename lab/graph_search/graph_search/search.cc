@@ -20,7 +20,7 @@ void bfs(vector< vector<int> > const &graph, char lStart, char lEnd) {
   dist[vStart] = 0;
   prev[vStart] = vStart;
   
-  while(not bfsQueue.empty()) {
+  while(!bfsQueue.empty()) {
     int v = bfsQueue.front();
     bfsQueue.pop();
     
@@ -85,7 +85,7 @@ void astar(vector< vector<int> > const &graph, char lStart, char lEnd) {
   // dist[vStart] = 0;
   prev[vStart] = vStart;
   
-  while(not aQueue.empty()) {
+  while(!aQueue.empty()) {
     int v = aQueue.top();
     aQueue.pop();
     
@@ -160,7 +160,7 @@ void dfs_iter(vector< vector<int> > const &graph, char lStart, char lEnd) {
   prev[vStart] = vStart;
   dfsStack.push(make_pair(vStart, 0));
   
-  while(not dfsStack.empty()) {
+  while(!dfsStack.empty()) {
     int v = dfsStack.top().first;
     int i = dfsStack.top().second;
     
