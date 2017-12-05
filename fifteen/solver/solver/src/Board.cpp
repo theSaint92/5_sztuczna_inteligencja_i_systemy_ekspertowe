@@ -49,7 +49,7 @@ uint64_t Board::transformToState()
 
 void Board::getFromState(uint64_t state)
 {
-	this->values = transformer->getVector(state);
+	this->values = transformer->getVector(this->rows*this->cols, state);
 }
 
 std::string Board::toString()
