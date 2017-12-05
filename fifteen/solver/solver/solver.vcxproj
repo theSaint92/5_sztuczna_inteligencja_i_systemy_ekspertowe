@@ -154,6 +154,7 @@
     <ClInclude Include="include\Factorial.h" />
     <ClInclude Include="include\FactorialTransformer.h" />
     <ClInclude Include="include\HexaTransformer.h" />
+    <ClInclude Include="include\Result.h" />
     <ClInclude Include="include\Transformer.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

@@ -37,14 +37,14 @@ Board::Board(int rows, int cols, std::vector<int> values)
 
 uint64_t Board::transformToState()
 {
-	if( transformer != NULL )
-		return transformer->getState(this->values);
+	if( transformer == NULL ) throw std::domain_error("Transformer is not defined!");
+	return this->transformer->getState(this->values);
 }
 
 void Board::getFromState(uint64_t state)
 {
-	if( transformer != NULL)
-		this->values = this->transformer->getVector(this->rows*this->cols, state);
+	if (transformer == NULL) throw std::domain_error("Transformer is not defined!");
+	this->values = this->transformer->getVector(this->rows*this->cols, state);
 }
 
 std::string Board::toString()
@@ -67,14 +67,13 @@ std::string Board::toString()
 void Board::changeTransformer(Transformer &newTransformer)
 {
 	transformer = &newTransformer;
-	
 }
 
 bool Board::moveFreeTile(char moveDirection)
 {
 	//Getting position of 0 element
 	int zeroPosition = -1;
-	for (int i = 0; i < this->values.size(); i++)
+	for (unsigned int i = 0; i < this->values.size(); i++)
 	{
 		if (!values[i])
 		{
@@ -106,4 +105,26 @@ bool Board::moveFreeTile(char moveDirection)
 	}
 	else return false;
 	return true;
+}
+
+Result Board::solveWithBFS(std::string order) 
+{
+	Result result;
+
+	return result;
+}
+
+Result Board::solveWithDFS(std::string order)
+{
+	Result result;
+
+	return result;
+
+}
+
+Result Board::solveWithHeuristic()
+{
+	Result result;
+
+	return result;
 }

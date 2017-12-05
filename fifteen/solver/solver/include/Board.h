@@ -1,8 +1,9 @@
 #pragma once
 
-#include <Transformer.h>
-#include <HexaTransformer.h>
-#include <FactorialTransformer.h>
+#include "Transformer.h"
+#include "HexaTransformer.h"
+#include "FactorialTransformer.h"
+#include "Result.h"
 #include <vector>
 #include <string>
 #include <memory>
@@ -35,5 +36,10 @@ public:
 	std::string toString();
 	static void changeTransformer(Transformer &transformer);
 	bool moveFreeTile(char moveDirection);
+
+	//Solving methods
+	Result solveWithBFS(std::string order);
+	Result solveWithDFS(std::string order);
+	Result solveWithHeuristic();
 };
 
