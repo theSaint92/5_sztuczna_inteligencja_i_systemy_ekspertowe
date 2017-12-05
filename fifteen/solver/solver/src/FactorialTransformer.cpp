@@ -45,3 +45,14 @@ int FactorialTransformer::countSmallerThan(int number, const std::vector<int> &v
 	}	
 	return result;
 }
+
+//uint64_t FactorialTransformer::getNextState(int rows,int cols, uint64_t currentState, char moveDirection)
+//{
+//	bool possible = 1;
+//	//Checking if move is possible at all
+//	//TODO
+//	if (!possible) return -1; /*uint64_t -1 is basicly 0xffffffffffffffff so it's impossbile state to achive in any board*/
+//	uint64_t result = 0;
+//
+//	return result;
+//}

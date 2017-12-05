@@ -5,11 +5,12 @@
 #include <FactorialTransformer.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 class Board
 {
 private:
-	Transformer* transformer;
+	static Transformer* transformer;
 	int rows;
 	int cols;
 	std::vector<int> values;
@@ -32,6 +33,7 @@ public:
 	uint64_t transformToState();
 	void getFromState(uint64_t state);
 	std::string toString();
-	void changeTransformer(const std::string &transformer);
+	static void changeTransformer(Transformer &transformer);
+	bool moveFreeTile(char moveDirection);
 };
 
