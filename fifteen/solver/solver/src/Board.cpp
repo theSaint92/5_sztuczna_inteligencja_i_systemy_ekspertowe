@@ -69,7 +69,7 @@ std::string Board::toString()
 	return oss.str();
 }
 
-void Board::changeTransformer(std::string transformer)
+void Board::changeTransformer(const std::string &transformer)
 {
 	if (!transformer.compare("hexadecimal"))
 	{

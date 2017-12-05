@@ -32,6 +32,6 @@ public:
 	uint64_t transformToState();
 	void getFromState(uint64_t state);
 	std::string toString();
-	void changeTransformer(std::string transformer);
+	void changeTransformer(const std::string &transformer);
 };
 
