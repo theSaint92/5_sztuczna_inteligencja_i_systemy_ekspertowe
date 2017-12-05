@@ -23,7 +23,7 @@
     <ProjectGuid>{ECE81D57-3CCA-4362-9010-E5F199DBACDD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>solver</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -77,6 +77,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath)include\;$(WindowsSDK_IncludePath);</IncludePath>
+    <SourcePath>$(VC_SourcePath)src\;</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -143,11 +145,16 @@
   <ItemGroup>
     <ClCompile Include="src\Board.cpp" />
     <ClCompile Include="src\Factorial.cpp" />
+    <ClCompile Include="src\FactorialTransformer.cpp" />
     <ClCompile Include="src\fifteen.cpp" />
+    <ClCompile Include="src\HexaTransformer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Board.h" />
     <ClInclude Include="include\Factorial.h" />
+    <ClInclude Include="include\FactorialTransformer.h" />
+    <ClInclude Include="include\HexaTransformer.h" />
+    <ClInclude Include="include\Transformer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

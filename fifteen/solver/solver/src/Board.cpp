@@ -7,6 +7,7 @@
 
 Board::Board()
 {
+	this->transformer = new HexaTransformer();
 	this->rows = 4;
 	this->cols = 4;
 	// generete some random state of the puzzle using built-in random generator:
@@ -16,7 +17,8 @@ Board::Board()
 
 Board::Board(int rows, int cols)
 {
-	if (rows*cols > 20 || rows*cols <= 0) throw std::invalid_argument("rows*cols must be in range (1...20)");
+	if (rows*cols > 16 || rows*cols <= 0) throw std::invalid_argument("rows*cols must be in range (1...16)");
+	this->transformer = new HexaTransformer();
 	this->rows = rows;
 	this->cols = cols;
 	// generete some random state of the puzzle using built-in random generator:
@@ -27,26 +29,27 @@ Board::Board(int rows, int cols)
 
 Board::Board(int rows, int cols, std::vector<int> values)
 {
-	if (rows*cols > 20 || rows*cols <= 0) throw std::invalid_argument("rows*cols must be in range (1...20)");
+	if (rows*cols > 16 || rows*cols <= 0) throw std::invalid_argument("rows*cols must be in range (1...16)");
 	if (rows*cols != values.size()) throw std::invalid_argument("rows*cols must be equal to values vector size");
+	this->transformer = new HexaTransformer();
 	this->rows = rows;
 	this->cols = cols;
 	this->values = values;
 }
 
-Board::~Board()
+Board::~Board() 
 {
+	delete this->transformer;
 }
 
 uint64_t Board::transformToState()
 {
-	//TODO
-	return 0;
+	return this->transformer->getState(this->values);
 }
 
 void Board::getFromState(uint64_t state)
 {
-	//TODO
+	this->values = transformer->getVector(state);
 }
 
 std::string Board::toString()
@@ -64,4 +67,19 @@ std::string Board::toString()
 	}
 
 	return oss.str();
+}
+
+void Board::changeTransformer(std::string transformer)
+{
+	if (!transformer.compare("hexadecimal"))
+	{
+		delete this->transformer;
+		this->transformer = new HexaTransformer();
+	}
+	else if (!transformer.compare("factorial"))
+	{
+		delete this->transformer;
+		this->transformer = new FactorialTransformer();
+	}
+	
 }
