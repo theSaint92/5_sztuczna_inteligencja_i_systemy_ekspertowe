@@ -112,13 +112,6 @@ Result Board::solveWithBFS(std::string order)
 {
 	Result result;
 
-	return result;
-}
-
-Result Board::solveWithDFS(std::string order)
-{
-	Result result;
-
 	std::queue<uint64_t> bfsQueue;
 	bfsQueue.push(this->transformToState());
 	//void bfs(vector< vector<int> > const &graph, char lStart, char lEnd) {
@@ -176,6 +169,15 @@ Result Board::solveWithDFS(std::string order)
 	//	}
 	//
 	//}
+
+	return result;
+}
+
+Result Board::solveWithDFS(std::string order)
+{
+	Result result;
+
+
 	return result;
 
 }
