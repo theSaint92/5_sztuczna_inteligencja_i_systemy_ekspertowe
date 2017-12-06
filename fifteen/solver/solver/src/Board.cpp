@@ -3,6 +3,7 @@
 #include <algorithm> //random_shuffle
 #include <sstream> //toString()
 #include <string> //toString()
+#include <queue> 
 
 Transformer* Board::transformer = NULL;
 
@@ -53,7 +54,7 @@ std::string Board::toString()
 
 	if (!this->values.empty())
 	{
-		int size = this->values.size();
+		size_t size = this->values.size();
 		
 		for (int i = 0; i < size; i++) {
 			oss << this->values[i] << "\t";
@@ -118,6 +119,63 @@ Result Board::solveWithDFS(std::string order)
 {
 	Result result;
 
+	std::queue<uint64_t> bfsQueue;
+	bfsQueue.push(this->transformToState());
+	//void bfs(vector< vector<int> > const &graph, char lStart, char lEnd) {
+	//	int vStart = lStart - 'a';
+	//	int vEnd = lEnd - 'a';
+	//
+	//	vector<int> prev(graph.size(), -1);
+	//	vector<int> dist(graph.size(), -1);
+	//
+	//	queue<int> bfsQueue;
+	//	bfsQueue.push(vStart);
+	//	dist[vStart] = 0;
+	//	prev[vStart] = vStart;
+	//
+	//	while (!bfsQueue.empty()) {
+	//		int v = bfsQueue.front();
+	//		bfsQueue.pop();
+	//
+	//		for (int i = 0; i < graph[v].size(); i++) {
+	//			int u = graph[v][i];
+	//			if (prev[u] == -1) {
+	//				cerr << char('a' + v) << " -> " << char('a' + u) << '\n';
+	//				bfsQueue.push(u);
+	//				dist[u] = dist[v] + 1;
+	//				prev[u] = v;
+	//				/* if(u == vEnd) {
+	//				return;
+	//				} */
+	//			}
+	//		}
+	//	}
+	//
+	//	for (int i = 0; i < graph.size(); i++) {
+	//		cerr << char('a' + i) << ": ";
+	//		cerr << "dist=" << dist[i] << ", ";
+	//		cerr << "prev=" << (prev[i] == -1 ? '-' : char('a' + prev[i])) << ", ";
+	//		cerr << '\n';
+	//	}
+	//
+	//	// expample: generate and print path to the final state
+	//	if (prev[vEnd] != -1) { // vEnd found
+	//		vector<char> path;
+	//		path.push_back('a' + vEnd);
+	//		int v = vEnd;
+	//		while (prev[v] != v) {
+	//			v = prev[v];
+	//			path.push_back('a' + v);
+	//		}
+	//		reverse(path.begin(), path.end());
+	//		for (int i = 0; i < path.size(); i++) {
+	//			if (i != 0) cout << " -> ";
+	//			cout << path[i];
+	//		}
+	//		cout << '\n';
+	//	}
+	//
+	//}
 	return result;
 
 }

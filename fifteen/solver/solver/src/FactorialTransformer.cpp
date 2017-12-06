@@ -4,7 +4,7 @@
 uint64_t FactorialTransformer::getState(std::vector<int> values)
 {
 	uint64_t result = 0;
-	int size = values.size();
+	size_t size = values.size();
 	for (int i = 0; i < size; i++) {
 		uint64_t factorial = Factorial::getInstance().get(size - i - 1);
 		if(values[i] != 0) result += factorial * countSmallerThan(values[i],values);
