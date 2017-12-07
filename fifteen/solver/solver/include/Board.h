@@ -16,6 +16,11 @@ private:
 	int cols;
 	std::vector<int> values;
 
+	char oppositeMove(char move);
+	void getOrderInfo(std::string givenOrder, bool &randomOrder, std::vector<char> &order); //edits order and randomOrder correctly based on givenOrder
+	uint64_t getSolvedState(); //Returns how solved state of board looks
+	Board(int rows, int cols, char justToRecognize); //Constructor that doesnt initialize vector values to save some time;
+
 public:
 
 	//Constructors
@@ -23,7 +28,7 @@ public:
 	Board(int rows, int cols);
 	Board(int rows, int cols, std::vector<int> values);
 
-	~Board();
+	~Board(){};
 
 	//Getters
 	int getRows();

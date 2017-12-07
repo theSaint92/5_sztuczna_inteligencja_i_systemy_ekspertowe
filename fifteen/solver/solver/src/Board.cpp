@@ -4,6 +4,8 @@
 #include <sstream> //toString()
 #include <string> //toString()
 #include <queue> 
+#include <map>
+#include <iostream>
 
 Transformer* Board::transformer = NULL;
 
@@ -34,6 +36,13 @@ Board::Board(int rows, int cols, std::vector<int> values)
 	this->rows = rows;
 	this->cols = cols;
 	this->values = values;
+}
+
+Board::Board(int rows, int cols, char justToRecognize)
+{
+	if (rows*cols > 16 || rows*cols <= 0) throw std::invalid_argument("rows*cols must be in range (1...16)");
+	this->rows = rows;
+	this->cols = cols;
 }
 
 uint64_t Board::transformToState()
@@ -108,12 +117,167 @@ bool Board::moveFreeTile(char moveDirection)
 	return true;
 }
 
-Result Board::solveWithBFS(std::string order) 
+uint64_t Board::getSolvedState() {
+	std::vector<int> solvedSeq;
+	int size = this->rows*this->cols;
+	for (int i = 1; i < size; i++) solvedSeq.push_back(i);
+	solvedSeq.push_back(0);
+
+	Board* solvedBoard = new Board(this->rows, this->cols, solvedSeq);
+	uint64_t result = solvedBoard->transformToState();
+	delete solvedBoard;
+	return result;
+}
+
+void Board::getOrderInfo(std::string givenOrder, bool &randomOrder, std::vector<char> &order)
+{
+	if (givenOrder.size() == 1) {
+		if (givenOrder.at(0) == 'R' || givenOrder.at(0) == 'r') {
+			randomOrder = true;
+			order = { 'L','P','G','D' };
+			std::random_shuffle(order.begin(), order.end());
+		}
+		else throw std::invalid_argument("Unidentified order of search");
+	}
+	else if (givenOrder.size() == 4) {
+		order.clear();
+		randomOrder = false;
+		for (int i = 0; i < 4; i++) {
+			if (givenOrder.at(i) == 'L' || givenOrder.at(i) == 'l') {
+				if (!order.empty()) {
+					if (std::find(order.begin(), order.end(), 'L') != order.end()) {
+						throw std::invalid_argument("Unidentified order of search");
+					}
+				}
+				order.push_back('L');
+			}
+			else if (givenOrder.at(i) == 'P' || givenOrder.at(i) == 'p') {
+				if (!order.empty()) {
+					if (std::find(order.begin(), order.end(), 'P') != order.end()) {
+						throw std::invalid_argument("Unidentified order of search");
+					}
+				}
+				order.push_back('P');
+			}
+			else if (givenOrder.at(i) == 'G' || givenOrder.at(i) == 'g') {
+				if (!order.empty()) {
+					if (std::find(order.begin(), order.end(), 'G') != order.end()) {
+						throw std::invalid_argument("Unidentified order of search");
+					}
+				}
+				order.push_back('G');
+			}
+			else if (givenOrder.at(i) == 'D' || givenOrder.at(i) == 'd') {
+				if (!order.empty()) {
+					if (std::find(order.begin(), order.end(), 'D') != order.end()) {
+						throw std::invalid_argument("Unidentified order of search");
+					}
+				}
+				order.push_back('D');
+			}
+			else throw std::invalid_argument("Unidentified order of search");
+		}
+	}
+	else throw std::invalid_argument("Unidentified order of search");
+}
+
+std::vector<int> Board::getValues() {
+	return this->values;
+}
+
+char Board::oppositeMove(char move) {
+	if (move == 'L') return 'P';
+	else if (move == 'P') return 'L';
+	else if (move == 'G') return 'D';
+	else if (move == 'D') return 'G';
+	else if (move == (char)0) return (char)0;
+	else throw std::invalid_argument("Unspecified Direction: " + move);
+}
+
+Result Board::solveWithBFS(std::string givenOrder) 
 {
 	Result result;
 
+	//Getting order vector
+	std::vector<char> order;
+	bool randomOrder;
+	getOrderInfo(givenOrder, randomOrder, order);
+
+	uint64_t startState = this->transformToState();
+	uint64_t endState = this->getSolvedState();
+
+	//Maybe it's already solved?
+	if (startState == endState) {
+		result.steps = 0;
+		return result;
+	}
+
 	std::queue<uint64_t> bfsQueue;
-	bfsQueue.push(this->transformToState());
+	//Map of visited states - pair is <state, move_from_prev_state>
+	std::map<uint64_t, char> visitedStates;
+
+	bfsQueue.push(startState);
+	visitedStates.insert(std::make_pair(startState, (char)0 ));
+	while (!bfsQueue.empty())
+	{
+		//Shuffle order if it's random
+		if (randomOrder) std::random_shuffle(order.begin(), order.end());
+
+		//Get element to search from queue
+		uint64_t currentState = bfsQueue.front();
+		bfsQueue.pop();
+
+		//Remove from search elements, the element where it came from
+		//I think it saves us some time
+		char prevMove = visitedStates[currentState];
+		std::vector<char> shortOrder(4);
+		std::copy(order.begin(), order.end(), shortOrder.begin());
+		shortOrder.erase(std::remove(shortOrder.begin(), shortOrder.end(), oppositeMove(prevMove)), shortOrder.end());
+
+		
+
+		std::string str(shortOrder.begin(), shortOrder.end());
+
+		//Now get the board of currentstate
+		Board currentStateBoard(this->rows, this->cols, (char)0);
+		currentStateBoard.getFromState(currentState);
+		currentStateBoard.getValues();
+
+		int size = shortOrder.size();
+		for (int i = 0; i < size; i++) {
+			Board nextStateBoard(this->rows, this->cols, currentStateBoard.getValues());
+			if (nextStateBoard.moveFreeTile(shortOrder[i])) {
+
+				//This if tries to add new state to map - will fail if it already exist
+				uint64_t nextState = nextStateBoard.transformToState();
+				if (visitedStates.insert(std::make_pair(nextState, shortOrder[i])).second)
+				{
+					//Sprawdzamy czy nie mozemy juz tego zakonczyc
+					if (nextState == endState) {
+						result.steps = 1;
+						result.seqOfMoves += shortOrder[i];
+						uint64_t previousState = currentState;
+						char lastMove = visitedStates[previousState];
+						while (lastMove != (char)0) {
+							result.steps++;
+							result.seqOfMoves += lastMove;
+						
+							//Getting previousState and lastMove
+							Board previousStateBoard(this->rows, this->cols, (char)0);
+							previousStateBoard.getFromState(previousState);
+							previousStateBoard.moveFreeTile(oppositeMove(lastMove));
+							previousState = previousStateBoard.transformToState();
+							lastMove = visitedStates[previousState];
+						}
+						reverse(result.seqOfMoves.begin(), result.seqOfMoves.end());
+						return result;
+					}
+					else bfsQueue.push(nextState);
+				}
+			}
+		}
+	}
+
 	//void bfs(vector< vector<int> > const &graph, char lStart, char lEnd) {
 	//	int vStart = lStart - 'a';
 	//	int vEnd = lEnd - 'a';
@@ -188,3 +352,5 @@ Result Board::solveWithHeuristic()
 
 	return result;
 }
+
+

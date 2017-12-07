@@ -2,6 +2,10 @@
 #include <string>
 
 struct Result {
-	uint64_t steps;
+	//Setting default values in constructor
+	Result() : steps(-1), seqOfMoves("") {}
+
+	//Elements
+	int64_t steps;
 	std::string seqOfMoves;
 };

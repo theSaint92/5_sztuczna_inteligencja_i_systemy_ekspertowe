@@ -12,6 +12,7 @@ void bfs(vector< vector<int> > const &graph, char lStart, char lEnd) {
   int vStart = lStart - 'a';
   int vEnd = lEnd - 'a';
   
+  cout << "DOING BFS\n";
   vector<int> prev(graph.size(), -1);
   vector<int> dist(graph.size(), -1);
   
@@ -229,6 +230,7 @@ int main() {
     }
     cerr << '\n';
   }
+  cout << "END OF DEBUG\n";
   
   bfs(graph, 'a', 'i');
   
