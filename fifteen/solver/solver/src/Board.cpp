@@ -230,49 +230,45 @@ Result Board::solveWithBFS(std::string givenOrder)
 		//Remove from search elements, the element where it came from
 		//I think it saves us some time
 		char prevMove = visitedStates[currentState];
-		std::vector<char> shortOrder(4);
-		std::copy(order.begin(), order.end(), shortOrder.begin());
-		shortOrder.erase(std::remove(shortOrder.begin(), shortOrder.end(), oppositeMove(prevMove)), shortOrder.end());
 
-		
-
-		std::string str(shortOrder.begin(), shortOrder.end());
+		std::string str(order.begin(), order.end());
 
 		//Now get the board of currentstate
 		Board currentStateBoard(this->rows, this->cols, (char)0);
 		currentStateBoard.getFromState(currentState);
 		currentStateBoard.getValues();
 
-		int size = shortOrder.size();
-		for (int i = 0; i < size; i++) {
-			Board nextStateBoard(this->rows, this->cols, currentStateBoard.getValues());
-			if (nextStateBoard.moveFreeTile(shortOrder[i])) {
+		for (int i = 0; i < 4; i++) {
+			if (order[i] != oppositeMove(prevMove)) {
+				Board nextStateBoard(this->rows, this->cols, currentStateBoard.getValues());
+				if (nextStateBoard.moveFreeTile(order[i])) {
 
-				//This if tries to add new state to map - will fail if it already exist
-				uint64_t nextState = nextStateBoard.transformToState();
-				if (visitedStates.insert(std::make_pair(nextState, shortOrder[i])).second)
-				{
-					//Sprawdzamy czy nie mozemy juz tego zakonczyc
-					if (nextState == endState) {
-						result.steps = 1;
-						result.seqOfMoves += shortOrder[i];
-						uint64_t previousState = currentState;
-						char lastMove = visitedStates[previousState];
-						while (lastMove != (char)0) {
-							result.steps++;
-							result.seqOfMoves += lastMove;
-						
-							//Getting previousState and lastMove
-							Board previousStateBoard(this->rows, this->cols, (char)0);
-							previousStateBoard.getFromState(previousState);
-							previousStateBoard.moveFreeTile(oppositeMove(lastMove));
-							previousState = previousStateBoard.transformToState();
-							lastMove = visitedStates[previousState];
+					//This if tries to add new state to map - will fail if it already exist
+					uint64_t nextState = nextStateBoard.transformToState();
+					if (visitedStates.insert(std::make_pair(nextState, order[i])).second)
+					{
+						//Sprawdzamy czy nie mozemy juz tego zakonczyc
+						if (nextState == endState) {
+							result.steps = 1;
+							result.seqOfMoves += order[i];
+							uint64_t previousState = currentState;
+							char lastMove = visitedStates[previousState];
+							while (lastMove != (char)0) {
+								result.steps++;
+								result.seqOfMoves += lastMove;
+
+								//Getting previousState and lastMove
+								Board previousStateBoard(this->rows, this->cols, (char)0);
+								previousStateBoard.getFromState(previousState);
+								previousStateBoard.moveFreeTile(oppositeMove(lastMove));
+								previousState = previousStateBoard.transformToState();
+								lastMove = visitedStates[previousState];
+							}
+							reverse(result.seqOfMoves.begin(), result.seqOfMoves.end());
+							return result;
 						}
-						reverse(result.seqOfMoves.begin(), result.seqOfMoves.end());
-						return result;
+						else bfsQueue.push(nextState);
 					}
-					else bfsQueue.push(nextState);
 				}
 			}
 		}
