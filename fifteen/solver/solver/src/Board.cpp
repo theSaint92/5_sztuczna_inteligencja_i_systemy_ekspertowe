@@ -4,6 +4,7 @@
 #include <sstream> //toString()
 #include <string> //toString()
 #include <queue> 
+#include <stack>
 #include <map>
 #include <iostream>
 
@@ -91,26 +92,31 @@ bool Board::moveFreeTile(char moveDirection)
 			break;
 		}
 	}
+
+	//int currentRow = zeroPosition / cols;
+	//int currentCol = zeroPosition%cols;
+	//std::cout << "ROW: " << currentRow << ", COLUMN: " << currentCol << std::endl;
+
 	if (zeroPosition == -1) throw std::domain_error("Board doesn't have 0 element?!");
 
 	if (moveDirection == 'L') {
 		//We can't left if 0 element is in first column
-		if (!(zeroPosition%rows)) return false;
+		if (!(zeroPosition%cols)) return false;
 		else std::swap(this->values[zeroPosition], this->values[zeroPosition-1]);
 	}
 	else if (moveDirection == 'P') {
 		//We can't right if 0 element is in last column
-		if (!((zeroPosition+1)%rows)) return false;
+		if (!((zeroPosition+1)%cols)) return false;
 		else std::swap(this->values[zeroPosition], this->values[zeroPosition + 1]);
 	}
 	else if (moveDirection == 'G') {
 		//We can't up if 0 element is in first row
-		if (zeroPosition<this->cols) return false;
+		if (!(zeroPosition/cols)) return false;
 		else std::swap(this->values[zeroPosition], this->values[zeroPosition - this->cols]);
 	}
 	else if (moveDirection == 'D') {
 		//We can't down if 0 element is in last row
-		if (zeroPosition>(this->cols*this->rows-this->rows-1)) return false;
+		if (zeroPosition / cols == rows-1) return false;
 		else std::swap(this->values[zeroPosition], this->values[zeroPosition + this->cols]);
 	}
 	else return false;
@@ -227,38 +233,42 @@ Result Board::solveWithBFS(std::string givenOrder)
 		uint64_t currentState = bfsQueue.front();
 		bfsQueue.pop();
 
-		//Remove from search elements, the element where it came from
-		//I think it saves us some time
-		char prevMove = visitedStates[currentState];
-
-		std::string str(order.begin(), order.end());
+		//Get the move where the previous state comes from
+		char moveToPrev = oppositeMove(visitedStates[currentState]);
 
 		//Now get the board of currentstate
 		Board currentStateBoard(this->rows, this->cols, (char)0);
 		currentStateBoard.getFromState(currentState);
-		currentStateBoard.getValues();
+		//std::cout << currentStateBoard.toString() << std::endl;
 
 		for (int i = 0; i < 4; i++) {
-			if (order[i] != oppositeMove(prevMove)) {
+			if (order[i] != moveToPrev) {
 				Board nextStateBoard(this->rows, this->cols, currentStateBoard.getValues());
 				if (nextStateBoard.moveFreeTile(order[i])) {
 
 					//This if tries to add new state to map - will fail if it already exist
 					uint64_t nextState = nextStateBoard.transformToState();
-					if (visitedStates.insert(std::make_pair(nextState, order[i])).second)
+					bool addStateToMap = false;
+					try {
+						addStateToMap = visitedStates.insert(std::make_pair(nextState, order[i])).second;
+					}
+					catch (const std::exception& e) {
+						throw std::out_of_range("Run out of memory in visistedStates map :(");
+					}
+					if (addStateToMap)
 					{
-						//Sprawdzamy czy nie mozemy juz tego zakonczyc
+						//Check if we have already finished
 						if (nextState == endState) {
 							result.steps = 1;
 							result.seqOfMoves += order[i];
 							uint64_t previousState = currentState;
 							char lastMove = visitedStates[previousState];
+							Board previousStateBoard(this->rows, this->cols, (char)0);
 							while (lastMove != (char)0) {
 								result.steps++;
 								result.seqOfMoves += lastMove;
 
 								//Getting previousState and lastMove
-								Board previousStateBoard(this->rows, this->cols, (char)0);
 								previousStateBoard.getFromState(previousState);
 								previousStateBoard.moveFreeTile(oppositeMove(lastMove));
 								previousState = previousStateBoard.transformToState();
@@ -267,79 +277,117 @@ Result Board::solveWithBFS(std::string givenOrder)
 							reverse(result.seqOfMoves.begin(), result.seqOfMoves.end());
 							return result;
 						}
-						else bfsQueue.push(nextState);
+						else {
+							try {
+								bfsQueue.push(nextState);
+							}
+							catch (const std::exception& e) {
+								throw std::out_of_range("bfsQueue reached it's maximum size!");
+							}
+						}
 					}
 				}
 			}
 		}
 	}
 
-	//void bfs(vector< vector<int> > const &graph, char lStart, char lEnd) {
-	//	int vStart = lStart - 'a';
-	//	int vEnd = lEnd - 'a';
-	//
-	//	vector<int> prev(graph.size(), -1);
-	//	vector<int> dist(graph.size(), -1);
-	//
-	//	queue<int> bfsQueue;
-	//	bfsQueue.push(vStart);
-	//	dist[vStart] = 0;
-	//	prev[vStart] = vStart;
-	//
-	//	while (!bfsQueue.empty()) {
-	//		int v = bfsQueue.front();
-	//		bfsQueue.pop();
-	//
-	//		for (int i = 0; i < graph[v].size(); i++) {
-	//			int u = graph[v][i];
-	//			if (prev[u] == -1) {
-	//				cerr << char('a' + v) << " -> " << char('a' + u) << '\n';
-	//				bfsQueue.push(u);
-	//				dist[u] = dist[v] + 1;
-	//				prev[u] = v;
-	//				/* if(u == vEnd) {
-	//				return;
-	//				} */
-	//			}
-	//		}
-	//	}
-	//
-	//	for (int i = 0; i < graph.size(); i++) {
-	//		cerr << char('a' + i) << ": ";
-	//		cerr << "dist=" << dist[i] << ", ";
-	//		cerr << "prev=" << (prev[i] == -1 ? '-' : char('a' + prev[i])) << ", ";
-	//		cerr << '\n';
-	//	}
-	//
-	//	// expample: generate and print path to the final state
-	//	if (prev[vEnd] != -1) { // vEnd found
-	//		vector<char> path;
-	//		path.push_back('a' + vEnd);
-	//		int v = vEnd;
-	//		while (prev[v] != v) {
-	//			v = prev[v];
-	//			path.push_back('a' + v);
-	//		}
-	//		reverse(path.begin(), path.end());
-	//		for (int i = 0; i < path.size(); i++) {
-	//			if (i != 0) cout << " -> ";
-	//			cout << path[i];
-	//		}
-	//		cout << '\n';
-	//	}
-	//
-	//}
-
 	return result;
 }
 
-Result Board::solveWithDFS(std::string order)
+Result Board::solveWithDFS(std::string givenOrder)
 {
 	Result result;
 
+	//Getting order vector
+	std::vector<char> order;
+	bool randomOrder;
+	getOrderInfo(givenOrder, randomOrder, order);
 
+	//We need to reverse it so first searched is actually on top
+	reverse(order.begin(), order.end());
+
+	uint64_t startState = this->transformToState();
+	uint64_t endState = this->getSolvedState();
+
+	//Maybe it's already solved?
+	if (startState == endState) {
+		result.steps = 0;
+		return result;
+	}
+
+	std::stack<uint64_t> dfsStack;
+	//Map of visited states - pair is <state, move_from_prev_state>
+	std::map<uint64_t, char> visitedStates;
+
+	dfsStack.push(startState);
+	visitedStates.insert(std::make_pair(startState, (char)0));
+	while (!dfsStack.empty())
+	{
+		//Shuffle order if it's random
+		if (randomOrder) std::random_shuffle(order.begin(), order.end());
+
+		//Get element to search from queue
+		uint64_t currentState = dfsStack.top();
+		dfsStack.pop();
+
+		//Check if we have already finished
+		if (currentState == endState) {
+			result.steps = 1;
+			uint64_t previousState = currentState;
+			char lastMove = visitedStates[previousState];
+			Board previousStateBoard(this->rows, this->cols, (char)0);
+			while (lastMove != (char)0) {
+				result.steps++;
+				result.seqOfMoves += lastMove;
+
+				//Getting previousState and lastMove
+				previousStateBoard.getFromState(previousState);
+				previousStateBoard.moveFreeTile(oppositeMove(lastMove));
+				previousState = previousStateBoard.transformToState();
+				lastMove = visitedStates[previousState];
+			}
+			reverse(result.seqOfMoves.begin(), result.seqOfMoves.end());
+			return result;
+		}
+		else {
+
+			//Get the move where the previous state comes from
+			char moveToPrev = oppositeMove(visitedStates[currentState]);
+
+			//Now get the board of currentstate
+			Board currentStateBoard(this->rows, this->cols, (char)0);
+			currentStateBoard.getFromState(currentState);
+			//std::cout << currentStateBoard.toString() << std::endl;
+
+			for (int i = 0; i < 4; i++) {
+				if (order[i] != moveToPrev) {
+					Board nextStateBoard(this->rows, this->cols, currentStateBoard.getValues());
+					if (nextStateBoard.moveFreeTile(order[i])) {
+
+						//This if tries to add new state to map - will fail if it already exist
+						uint64_t nextState = nextStateBoard.transformToState();
+						bool addStateToMap = false;
+						try {
+							addStateToMap = visitedStates.insert(std::make_pair(nextState, order[i])).second;
+						}
+						catch (const std::exception& e) {
+							throw std::out_of_range("Run out of memory in visistedStates map :(");
+						}
+						if (addStateToMap)
+						{
+							try {
+								dfsStack.push(nextState);
+							}
+							catch (const std::exception& e) {
+								throw std::out_of_range("dfsStack reached it's maximum size!");
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	return result;
-
 }
 
 Result Board::solveWithHeuristic()
