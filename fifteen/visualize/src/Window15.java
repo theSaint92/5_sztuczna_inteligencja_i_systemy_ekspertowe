@@ -23,9 +23,11 @@ public class Window15 extends JFrame implements ChangeListener {
 	private static int DISTANCE=4; //Between Tiles
 	private static int TILE_SIZE=80;
 	private static int SLIDER_HEIGHT=50;
+	private static int COUNTER_HEIGHT=20;
 	
 	private JButton[] puzzle;
 	private JSlider slider;
+	private JLabel counter;
 	
 	
 	public Window15(Integer rows, Integer cols, List<List<Integer>> list, String moveSeq) {
@@ -34,7 +36,7 @@ public class Window15 extends JFrame implements ChangeListener {
 		this.cols = cols;
 		
 		int windowWidth = 2*BOUND + cols*TILE_SIZE + cols*DISTANCE+14;
-		int windowHeight = 2*BOUND + rows*TILE_SIZE + rows*DISTANCE + SLIDER_HEIGHT + 50;
+		int windowHeight = 2*BOUND + rows*TILE_SIZE + rows*DISTANCE + SLIDER_HEIGHT + 50 + COUNTER_HEIGHT;
 		setSize(windowWidth, windowHeight);
 		setTitle("Solving " + rows + "x" + cols + " puzzle");
 		setLayout(null);
@@ -71,7 +73,14 @@ public class Window15 extends JFrame implements ChangeListener {
 	    slider.setLabelTable( labelTable );
 		
 	    slider.addChangeListener(this);
-	   
+	    
+		//Add text field for repoName
+		String text1 = "0/" + (list.size()-1);
+		counter = new JLabel(text1);
+		//counter.setFont(new Font("Arial", Font.PLAIN, 20));
+		counter.setHorizontalAlignment(JLabel.CENTER);
+		counter.setBounds(BOUND, 2*BOUND+rows*TILE_SIZE+rows*DISTANCE + SLIDER_HEIGHT, windowWidth-2*BOUND, COUNTER_HEIGHT);
+		add(counter);
 	}
 	
 	@Override
@@ -79,7 +88,8 @@ public class Window15 extends JFrame implements ChangeListener {
 	    JSlider source = (JSlider)e.getSource();
 	    if (!source.getValueIsAdjusting()) {
 	        int state = (int)source.getValue();
-	        
+	        counter.setText(state + "/" + (list.size()-1));
+	  
 			for (int i=0; i<rows*cols ; i++) {
 				puzzle[i].setText(Integer.toString(list.get(state).get(i)));
 				if(puzzle[i].getText().equals("0")) puzzle[i].setVisible(false);

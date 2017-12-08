@@ -332,7 +332,7 @@ Result Board::solveWithDFS(std::string givenOrder)
 
 		//Check if we have already finished
 		if (currentState == endState) {
-			result.steps = 1;
+			result.steps = 0;
 			uint64_t previousState = currentState;
 			char lastMove = visitedStates[previousState];
 			Board previousStateBoard(this->rows, this->cols, (char)0);

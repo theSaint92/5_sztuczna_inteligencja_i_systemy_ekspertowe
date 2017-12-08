@@ -1,9 +1,12 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 
-public class gui {
+public class VisualizeGUI {
+
+	private static Scanner sc;
 
 	/**
 	 * @param args
@@ -14,6 +17,7 @@ public class gui {
 	public static void main(String[] args) throws Exception {
 		//args: rows cols array[rows*cols] string
 		
+		sc = new Scanner(System.in);
 		Integer rows;
 		Integer cols;
 		List<List<Integer>> list = new ArrayList<List<Integer>>();
@@ -22,17 +26,19 @@ public class gui {
 	
 		//Getting values from args
 		try {
-			rows = Integer.parseInt(args[0]);
-			cols = Integer.parseInt(args[1]);
+			rows = sc.nextInt();
+			cols = sc.nextInt();
 			List<Integer> first = new ArrayList<Integer>();
 			
-			for (int i=2;i<rows*cols+2;i++) {
-				first.add(Integer.parseInt(args[i]));
+			for (int i=0;i<rows*cols;i++) {
+				first.add(sc.nextInt());
 			}
 			list.add(first);
 			
-			solutionLength = Integer.parseInt(args[rows*cols+2]);
-			if (solutionLength > 0) moveSeq = args[rows*cols+3];
+			solutionLength = sc.nextInt();
+			
+			if (solutionLength > 0) moveSeq = sc.next();
+			
 				
 			//Makeing list of moves
 			for (int i=0; i<moveSeq.length(); i++) {
@@ -50,7 +56,8 @@ public class gui {
 		for(int i=0;i<list.size();i++) {
 			System.err.println(i + ". " + list.get(i));
 		}
-		System.err.println(moveSeq);
+		System.err.println(solutionLength);
+		System.err.println(solutionLength);
 		
 		Window15 okno = new Window15(rows,cols,list,moveSeq);
 		okno.setDefaultCloseOperation(Window15.DISPOSE_ON_CLOSE);
