@@ -23,6 +23,11 @@ public class VisualizeGUI {
 		List<List<Integer>> list = new ArrayList<List<Integer>>();
 		int solutionLength;
 		String moveSeq = "";
+		String algorithm;
+		Integer statesChecked;
+		String time;
+		
+		
 	
 		//Getting values from args
 		try {
@@ -37,9 +42,12 @@ public class VisualizeGUI {
 			
 			solutionLength = sc.nextInt();
 			
-			if (solutionLength > 0) moveSeq = sc.next();
+			moveSeq = sc.nextLine();
+			moveSeq = sc.nextLine(); // We just took line end sign from previous
+			algorithm = sc.nextLine();
+			statesChecked = sc.nextInt();
+			time = sc.next();
 			
-				
 			//Makeing list of moves
 			for (int i=0; i<moveSeq.length(); i++) {
 				List<Integer> next = new ArrayList<Integer>();
@@ -51,15 +59,28 @@ public class VisualizeGUI {
 			return;
 		}
 		
-		System.err.println(rows);
-		System.err.println(cols);
-		for(int i=0;i<list.size();i++) {
-			System.err.println(i + ". " + list.get(i));
-		}
-		System.err.println(solutionLength);
-		System.err.println(solutionLength);
+		//System.err.println(rows);
+		//System.err.println(cols);
+		//for(int i=0;i<list.size();i++) {
+		//	System.err.println(i + ". " + list.get(i));
+		//}
+		//System.err.println(solutionLength);
+		//System.err.println(solutionLength);
 		
-		Window15 okno = new Window15(rows,cols,list,moveSeq);
+		String testInfo = 	"<html>Algorithm: " + 
+							algorithm + 
+							"<br>States checked: " + 
+							statesChecked + 
+							"<br>Solvable: " +
+							((solutionLength == -1) ? "no" : "yes") +
+							"<br>Time: " +
+							time +
+							"</html>";
+		
+
+				
+		
+		Window15 okno = new Window15(rows,cols,list,moveSeq, testInfo);
 		okno.setDefaultCloseOperation(Window15.DISPOSE_ON_CLOSE);
 		okno.setVisible(true);
 
