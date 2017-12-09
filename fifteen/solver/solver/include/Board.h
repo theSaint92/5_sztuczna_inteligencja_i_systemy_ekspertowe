@@ -41,10 +41,11 @@ public:
 	std::string toString();
 	static void changeTransformer(Transformer &transformer);
 	bool moveFreeTile(char moveDirection);
+	bool isSolvable();
 
 	//Solving methods
 	Result solveWithBFS(std::string order);
 	Result solveWithDFS(std::string order);
-	Result solveWithHeuristic();
+	Result solveWithAStar(char* heuristic);
 };
 

@@ -200,6 +200,11 @@ char Board::oppositeMove(char move) {
 	else throw std::invalid_argument("Unspecified Direction: " + move);
 }
 
+bool Board::isSolvable() {
+
+	return true;
+}
+
 Result Board::solveWithBFS(std::string givenOrder) 
 {
 	Result result;
@@ -390,9 +395,11 @@ Result Board::solveWithDFS(std::string givenOrder)
 	return result;
 }
 
-Result Board::solveWithHeuristic()
+Result Board::solveWithAStar(char* heuristic)
 {
 	Result result;
+
+
 
 	return result;
 }
