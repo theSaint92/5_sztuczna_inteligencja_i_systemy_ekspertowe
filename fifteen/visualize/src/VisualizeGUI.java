@@ -42,7 +42,7 @@ public class VisualizeGUI {
 			
 			solutionLength = sc.nextInt();
 			
-			moveSeq = sc.nextLine();
+			if (solutionLength > 0) moveSeq = sc.nextLine();
 			moveSeq = sc.nextLine(); // We just took line end sign from previous
 			algorithm = sc.nextLine();
 			statesChecked = sc.nextInt();

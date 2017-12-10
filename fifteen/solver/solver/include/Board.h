@@ -6,27 +6,28 @@
 #include "Result.h"
 #include <vector>
 #include <string>
-#include <memory>
 
 class Board
 {
 private:
 	static Transformer* transformer;
-	int rows;
-	int cols;
 	std::vector<int> values;
 
 	char oppositeMove(char move);
 	void getOrderInfo(std::string givenOrder, bool &randomOrder, std::vector<char> &order); //edits order and randomOrder correctly based on givenOrder
 	uint64_t getSolvedState(); //Returns how solved state of board looks
-	Board(int rows, int cols, char justToRecognize); //Constructor that doesnt initialize vector values to save some time;
+	
 
 public:
+
+	static int rows;
+	static int cols;
 
 	//Constructors
 	Board();
 	Board(int rows, int cols);
 	Board(int rows, int cols, std::vector<int> values);
+	Board(int rows, int cols, char justToRecognize); //Constructor that doesnt initialize vector values to save some time;
 
 	~Board(){};
 
@@ -46,6 +47,12 @@ public:
 	//Solving methods
 	Result solveWithBFS(std::string order);
 	Result solveWithDFS(std::string order);
-	Result solveWithAStar(char* heuristic);
+	Result solveWithAStar(int heuristic);
+
+	//Some "power" measures
+	//int manhattan(uint64_t &state);
+	//uint64_t scoreTileRightPlace(uint64_t const &state);
+	//
+	//struct TileOnPlaceComparator;
 };
 

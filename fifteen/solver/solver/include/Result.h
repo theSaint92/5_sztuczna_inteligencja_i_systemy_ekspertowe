@@ -3,7 +3,7 @@
 
 struct Result {
 	//Setting default values in constructor
-	Result() : steps(-1), seqOfMoves(""), visitedStates(0){}
+	Result() : steps(0), seqOfMoves(""), visitedStates(0){}
 
 	//Elements
 	int64_t steps;
