@@ -112,19 +112,33 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ChebyshevDistance.h" />
+    <ClInclude Include="Classifier.h" />
     <ClInclude Include="Distance.h" />
     <ClInclude Include="EuclideanDistance.h" />
     <ClInclude Include="EuclideanSquaredDistance.h" />
+    <ClInclude Include="InstanceDist.h" />
+    <ClInclude Include="Instance.h" />
+    <ClInclude Include="kFold.h" />
+    <ClInclude Include="kNNClassifier.h" />
     <ClInclude Include="ManhattanDistance.h" />
     <ClInclude Include="MinkowskiDistance.h" />
+    <ClInclude Include="functions.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChebyshevDistance.cpp" />
     <ClCompile Include="EuclideanDistance.cpp" />
     <ClCompile Include="EuclideanSquaredDistance.cpp" />
+    <ClCompile Include="Instance.cpp" />
+    <ClCompile Include="kFold.cpp" />
+    <ClCompile Include="kNNClassifier.cpp" />
     <ClCompile Include="ManhattanDistance.cpp" />
     <ClCompile Include="MinkowskiDistance.cpp" />
+    <ClCompile Include="functions.cpp" />
     <ClCompile Include="Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="k-NN-Algorithm.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
