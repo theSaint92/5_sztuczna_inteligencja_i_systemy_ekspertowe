@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
 			}
 		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
-			std::cout << "USAGE: k-NN-Alhorithm.exe -d filename [ -h ] [ -s | -n ] [ -ne number [number] ] [ -f number ] [ -di number ]  \n";
+			std::cout << "USAGE: knn.exe -d filename [ -h ] [ -s | -n ] [ -ne number [number] ] [ -f number ] [ -di number ]  \n";
 			std::cout << "\tWHERE:\n";
 			std::cout << "\t-h  \t--help		\tPrint this menu\n";
 			std::cout << "\t-d n\t--data n	\tSets dataset to work with (obligatory). n specify index of class attribute\n";
