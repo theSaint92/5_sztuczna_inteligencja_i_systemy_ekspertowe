@@ -23,6 +23,7 @@
     <ProjectGuid>{9256E989-90ED-4D3E-9B2B-7636DDB4CACE}</ProjectGuid>
     <RootNamespace>kNNAlgorithm</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>knn</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -112,10 +113,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ChebyshevDistance.h" />
-    <ClInclude Include="Classifier.h" />
     <ClInclude Include="Distance.h" />
     <ClInclude Include="EuclideanDistance.h" />
     <ClInclude Include="EuclideanSquaredDistance.h" />
+    <ClInclude Include="ErrorMatrix.h" />
+    <ClInclude Include="InstanceOccurence.h" />
     <ClInclude Include="InstanceDist.h" />
     <ClInclude Include="Instance.h" />
     <ClInclude Include="kFold.h" />
@@ -135,7 +137,8 @@
     <ClCompile Include="ManhattanDistance.cpp" />
     <ClCompile Include="MinkowskiDistance.cpp" />
     <ClCompile Include="functions.cpp" />
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ErrorMatrix.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="k-NN-Algorithm.rc" />

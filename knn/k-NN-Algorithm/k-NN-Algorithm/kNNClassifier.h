@@ -1,9 +1,8 @@
 #pragma once
-#include "Classifier.h"
+#include "Instance.h"
 #include "Distance.h"
 
-class kNNClassifier :
-	public Classifier
+class kNNClassifier
 {
 	Distance* distance;
 	std::vector<Instance> data;
@@ -12,7 +11,7 @@ class kNNClassifier :
 public:
 	kNNClassifier();
 	~kNNClassifier();
-	void classify(Instance &instance);
+	std::string kNNClassifier::classify(std::vector<double> insAt);
 	void build(const std::vector<Instance> &data);
 	void setNumOfNeighbours(int k);
 	void setDistanceMetrics(Distance* distance);

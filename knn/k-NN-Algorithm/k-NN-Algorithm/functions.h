@@ -13,3 +13,4 @@ void readFromFile(std::vector<Instance> &vec, const char* file, int classAttribu
 std::string vectorOfInstancesToString(const std::vector<Instance> &vec);
 std::vector<Instance> normalization(std::vector<Instance> &vec);
 std::vector<Instance> standarization(std::vector<Instance> &vec);
+std::vector<std::string> getClasses(const std::vector<Instance> &vec);

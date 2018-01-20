@@ -20,5 +20,8 @@ public:
 	//Setters
 	void setClass(std::string instanceClass);
 	void setAttributes(std::vector<double> attributes);
+	
+	//toString()
+	std::string toString();
 };
 

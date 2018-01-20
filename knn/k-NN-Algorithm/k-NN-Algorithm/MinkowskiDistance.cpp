@@ -5,7 +5,7 @@ MinkowskiDistance::MinkowskiDistance() {
 	this->p = 3;
 }
 
-MinkowskiDistance::MinkowskiDistance(unsigned int p) {
+MinkowskiDistance::MinkowskiDistance(double p) {
 	this->p = p;
 }
 

@@ -47,12 +47,7 @@ std::string vectorOfInstancesToString(const std::vector<Instance> &vec)
 {
 	std::stringstream ss;
 	for (Instance ins : vec) {
-
-		std::vector<double> attr = ins.getAttributes();
-		for (unsigned int i = 0; i < attr.size(); i++) {
-			ss << attr[i] << "\t";
-		}
-		ss << ": " << ins.getClass() << "\n";
+		ss << ins.toString() << "\n";
 	}
 	return ss.str();
 }
@@ -203,5 +198,26 @@ std::vector<Instance> standarization(std::vector<Instance> &vec)
 	//std::cout << std::endl;
 	//std::cout << vectorOfInstancesToString(result) << std::endl;
 
+	return result;
+}
+
+std::vector<std::string> getClasses(const std::vector<Instance> &vec)
+{
+	std::vector<std::string> result;
+	for (Instance ins : vec)
+	{
+		// classList is non-empty
+		bool found = false;
+		for (std::string className : result) {
+			if (className == ins.getClass())
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			result.push_back(ins.getClass());
+		}
+	}
 	return result;
 }

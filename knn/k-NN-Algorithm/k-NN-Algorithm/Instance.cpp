@@ -1,4 +1,6 @@
 #include "Instance.h"
+#include <sstream>
+#include <iomanip>
 
 Instance::Instance()
 {
@@ -37,4 +39,17 @@ void Instance::setClass(std::string instanceClass)
 void Instance::setAttributes(std::vector<double> attributes)
 {
 	this->attributes = attributes;
+}
+
+std::string Instance::toString()
+{
+	std::stringstream ss;
+
+	unsigned int size = this->attributes.size();
+	for (unsigned int i = 0; i < size ; i++) {
+		ss << std::setw(7) << std::setprecision(5) << this->attributes[i] << " ";
+	}
+	ss << ": " << this->instanceClass;
+
+	return ss.str();
 }

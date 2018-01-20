@@ -15,7 +15,7 @@ public:
 
 	double p;
 	MinkowskiDistance();
-	MinkowskiDistance(unsigned int p);
+	MinkowskiDistance(double p);
 	double dist(const unsigned int &dimension, double point1[], double point2[]);
 	
 };
