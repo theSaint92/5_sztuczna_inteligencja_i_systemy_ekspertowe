@@ -20,6 +20,7 @@ kNNClassifier::~kNNClassifier()
 
 std::string kNNClassifier::classify(std::vector<double> insAt)
 {
+	// mulitset nie jest jednak optymalny - lepiej zrobic vector i zwykly sort - my bad :(
 	std::multiset<InstanceDist> sorted;
 	
 	for (Instance i : this->data) {

@@ -99,3 +99,26 @@ std::string ErrorMatrix::getStatisticsString()
 
 	return ss.str();
 }
+
+//Need for latex printout
+double ErrorMatrix::getAccuracy()
+{
+	int size = instanceClasses.size();
+
+	std::vector<int> sizeOfClasses;
+	for (int i = 0; i < size; i++) {
+		int currentSize = 0;
+		for (int j = 0; j < size; j++) {
+			currentSize += this->errorMatrix[i][j];
+		}
+		sizeOfClasses.push_back(currentSize);
+	}
+
+	int total = 0;
+	int correct = 0;
+	for (int i = 0; i < size; i++) {
+		total += sizeOfClasses[i];
+		correct += this->errorMatrix[i][i];
+	}
+	return (double)correct / total * 100;
+}

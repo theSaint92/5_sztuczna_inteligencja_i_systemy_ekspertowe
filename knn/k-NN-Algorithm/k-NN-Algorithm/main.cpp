@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <iomanip>
 
 #include "Instance.h"
 #include "Distance.h"
@@ -38,6 +39,7 @@ int main(int argc, char** argv) {
 	int numOfNeighbours = 10;
 	int distanceFunc = DISTANCE::EUCLIDEAN;
 	double minkowskiOrder = 3;
+	bool latex = false;
 
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "--data") == 0 || strcmp(argv[i], "-d") == 0) {
@@ -87,6 +89,9 @@ int main(int argc, char** argv) {
 				}	
 			}
 		}
+		else if (strcmp(argv[i], "--latex") == 0 || strcmp(argv[i], "-l") == 0) {
+			latex = true;
+		}
 		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
 			std::cout << "USAGE: knn.exe -d filename [ -h ] [ -s | -n ] [ -ne number [number] ] [ -f number ] [ -di number ]  \n";
 			std::cout << "\tWHERE:\n";
@@ -102,6 +107,7 @@ int main(int argc, char** argv) {
 			std::cout << "\t			\t  3    Manhattan \n";
 			std::cout << "\t			\t  4    Chebyshev \n";
 			std::cout << "\t			\t  5 p  Minkovski of order p (default p=3) \n";
+			std::cout << "\t-l  \t--latex		\tPrint Accuracy as Latex Table Row\n";
 			return 0;
 		}
 		else {
@@ -189,37 +195,54 @@ int main(int argc, char** argv) {
 	clock_t end = clock();
 
 	//Printing results
-	std::cout << "==================INFO ABOUT TEST=================\n";
+	if (!latex) {
+		std::cout << "==================INFO ABOUT TEST=================\n";
 
-	std::string file = data;
-	size_t found;
-	found = file.find_last_of("/\\");
-	std::cout << "File: " << file.substr(found + 1);
+		std::string file = data;
+		size_t found;
+		found = file.find_last_of("/\\");
+		std::cout << "File: " << file.substr(found + 1);
 
-	std::cout << " ,Attributes: " << vec[0].getAttributes().size();
-	std::cout << " ,Instances: " << vec.size() << std::endl;
+		std::cout << " ,Attributes: " << vec[0].getAttributes().size();
+		std::cout << " ,Instances: " << vec.size() << std::endl;
 
-	std::cout << "Classes: ";
-	int size = classes.size();
-	for (int i = 0; i < size; i++) {
-		std::cout << classes[i];
-		if (i < size - 1) std::cout << ", ";
+		std::cout << "Classes: ";
+		int size = classes.size();
+		for (int i = 0; i < size; i++) {
+			std::cout << classes[i];
+			if (i < size - 1) std::cout << ", ";
+		}
+		std::cout << std::endl;
+
+		std::cout << "Method: " << numOfFolds << "-fold cross-validation" << std::endl;
+		std::cout << "Metric: " << distanceString << std::endl;
+		std::cout << "Nearest neighbours checked: " << numOfNeighbours << std::endl;
+		std::cout << "Standarized=" << ((standarize) ? "yes" : "no");
+		std::cout << " ,Normalization=" << ((normalize) ? "yes" : "no") << std::endl;
+		std::cout << "Computing time: " << end - begin << "ms" << std::endl;
+
+		std::cout << "===================TEST RESULTS===================\n";
+		std::cout << "Error Matrix:\n";
+		std::cout << err.toString();
+		std::cout << "Statistics:\n";
+		std::cout << err.getStatisticsString();
+		std::cout << std::endl;
 	}
-	std::cout << std::endl;
+	else {
+		//	\hline
+		//		file.data & distance & numOfNeighbours & normalization & standarization & accuracy
 
-	std::cout << "Method: " << numOfFolds << "-fold cross-validation" << std::endl;
-	std::cout << "Metric: " << distanceString << std::endl;
-	std::cout << "Nearest neighbours checked: " << numOfNeighbours << std::endl;
-	std::cout << "Standarized=" << ((standarize) ? "yes" : "no");
-	std::cout << " ,Normalization=" << ((normalize) ? "yes" : "no") << std::endl;
-	std::cout << "Computing time: " << end - begin << "ms" << std::endl;
-
-	std::cout << "===================TEST RESULTS===================\n";
-	std::cout << "Error Matrix:\n";
-	std::cout << err.toString();
-	std::cout << "Statistics:\n";
-	std::cout << err.getStatisticsString();
-	std::cout << std::endl;
+		std::cout << "\t\\hline\n\t\t";
+		std::string file = data;
+		size_t found = file.find_last_of("/\\");
+		size_t found2 = file.find_last_of(".");
+		std::cout << file.substr(found + 1, found2-found-1) << " & ";
+		std::cout << distanceString << " & ";
+		std::cout << numOfNeighbours << " & ";
+		std::cout << ((normalize) ? "yes" : "no") << " & ";
+		std::cout << ((standarize) ? "yes" : "no") << " & ";
+		std::cout << std::fixed << std::setprecision(2) << err.getAccuracy() << "\\% \\\\\n";
+	}
 	
 
 	delete d;
